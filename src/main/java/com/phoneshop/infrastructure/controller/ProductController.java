@@ -19,7 +19,7 @@ public class ProductController {
         return productService.getSimilarProducts(id);
     }
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public List<ProductDTO> getAllProducts() {
         return productService.getAllProducts();
     }
