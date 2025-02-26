@@ -1,73 +1,91 @@
 import http from 'k6/http';
-import { sleep } from 'k6';
+import { check, sleep } from 'k6';
 
 export let options = {
   scenarios: {
-    normal: {
+    allProducts: {
       executor: 'constant-vus',
-      vus: 200,
+      vus: 100,
       duration: '10s',
-      exec: "normal",
+      exec: "allProducts",
       gracefulStop: '0s',
     },
-    notFound: {
+    singleProduct: {
       executor: 'constant-vus',
-      vus: 200,
+      vus: 100,
       duration: '10s',
-      exec: "notFound",
+      exec: "singleProduct",
       gracefulStop: '0s',
       startTime: '10s'
     },
-    error: {
+    normal: {
       executor: 'constant-vus',
-      vus: 200,
+      vus: 100,
       duration: '10s',
-      exec: "error",
+      exec: "normal",
       gracefulStop: '0s',
       startTime: '20s'
     },
-    slow: {
+    notFound: {
       executor: 'constant-vus',
-      vus: 200,
+      vus: 100,
       duration: '10s',
-      exec: "slow",
-      gracefulStop: '10s',
+      exec: "notFound",
+      gracefulStop: '0s',
       startTime: '30s'
     },
-    verySlow: {
+    error: {
       executor: 'constant-vus',
-      vus: 200,
+      vus: 100,
       duration: '10s',
-      exec: "verySlow",
-      gracefulStop: '30s',
-      startTime: '50s'
+      exec: "error",
+      gracefulStop: '0s',
+      startTime: '40s'
     }
   }
 };
 
 const host = "http://host.docker.internal:5000";
 
+export function allProducts() {
+  let res = http.get(host + "/product/");
+  check(res, {
+    "status is 200": (r) => r.status === 200,
+    "response is JSON": (r) => r.headers['Content-Type'] === "application/json"
+  });
+  sleep(0.5);
+}
+
+export function singleProduct() {
+  let res = http.get(host + "/product/1");
+  check(res, {
+    "status is 200": (r) => r.status === 200,
+    "response contains marca": (r) => JSON.parse(r.body).marca !== undefined
+  });
+  sleep(0.5);
+}
+
 export function normal() {
-  http.get(host + "/product/1/similar");
-  sleep(0.5);
-}
-
-export function slow() {
-  http.get(host + "/product/2/similar");
-  sleep(0.5);
-}
-
-export function verySlow() {
-  http.get(host + "/product/3/similar");
+  let res = http.get(host + "/product/1/similar");
+  check(res, {
+    "status is 200": (r) => r.status === 200,
+    "response is JSON": (r) => r.headers['Content-Type'] === "application/json"
+  });
   sleep(0.5);
 }
 
 export function notFound() {
-  http.get(host + "/product/4/similar");
+  let res = http.get(host + "/product/999");
+  check(res, {
+    "status is 404": (r) => r.status === 404
+  });
   sleep(0.5);
 }
 
 export function error() {
-  http.get(host + "/product/5/similar");
+  let res = http.get(host + "/product/5/similar");
+  check(res, {
+    "status is 500": (r) => r.status === 500
+  });
   sleep(0.5);
 }
