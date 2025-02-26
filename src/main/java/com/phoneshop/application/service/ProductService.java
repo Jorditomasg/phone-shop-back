@@ -2,6 +2,7 @@ package com.phoneshop.application.service;
 
 import com.phoneshop.application.port.dto.ProductDTO;
 import com.phoneshop.application.port.mapper.ProductMapper;
+import com.phoneshop.domain.model.Product;
 import com.phoneshop.infrastructure.client.ProductClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,10 @@ public class ProductService {
         return productClient.getAllProducts().stream()
                 .map(ProductMapper::toDTO)
                 .toList();
+    }
+
+    public ProductDTO getProductById(String productId) {
+        Product product = productClient.getProductById(productId);
+        return product != null ? ProductMapper.toDTO(product) : null;
     }
 }
