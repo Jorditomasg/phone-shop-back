@@ -7,6 +7,14 @@
 - Maven
 - Docker & Docker Compose
 
+## Features
+
+- **Retrieve All Products**: Get a list of all available mobile devices.
+- **Product Details**: Fetch specifications for a specific product.
+- **Similar Products**: Retrieve recommendations based on a given product.
+- **Optimized Data Mapping**: Internal domain model mapped to a frontend-friendly response format.
+- **Performance Testing**: k6 integration for load testing.
+
 ### Installation
 1. Clone the repository:
    ```sh
@@ -27,6 +35,38 @@
 The API will be available at `http://localhost:5000`.
 
 ---
+
+## API Endpoints
+
+### Get All Products
+```
+GET /product/
+Response: [{ id: string, marca: string, modelo: string, precio: number, ... }]
+```
+
+### Get Product by ID
+```
+GET /product/{id}
+Response: { id: string, marca: string, modelo: string, precio: number, colors: [], storages: [] }
+```
+
+### Get Similar Products
+```
+GET /product/{id}/similar
+Response: [{ id: string, marca: string, modelo: string, precio: number, ... }]
+```
+
+---
+
+## Technologies
+- **Spring Boot 3.4.3**
+- **Java 17**
+- **Maven**
+- **Docker & Docker Compose**
+- **RestTemplate** for API communication
+- **Lombok** for model simplification
+- **JUnit & Mockito** for testing
+
 
 ## Running Tests
 
