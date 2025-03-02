@@ -5,7 +5,9 @@ import com.phoneshop.application.port.mapper.ProductMapper;
 import com.phoneshop.domain.model.Product;
 import com.phoneshop.infrastructure.client.ProductClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +36,9 @@ public class ProductService {
 
     public ProductDTO getProductById(String productId) {
         Product product = productClient.getProductById(productId);
-        return product != null ? ProductMapper.toDTO(product) : null;
+        if (product == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+        return ProductMapper.toDTO(product);
     }
 }

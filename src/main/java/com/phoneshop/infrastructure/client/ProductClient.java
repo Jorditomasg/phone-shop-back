@@ -3,6 +3,7 @@ package com.phoneshop.infrastructure.client;
 import com.phoneshop.domain.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -24,7 +25,13 @@ public class ProductClient {
 
     public Product getProductById(String productId) {
         String url = appConfig.getApiUrl() + "product/" + productId;
-        return restTemplate.getForObject(url, Product.class);
+        try {
+            return restTemplate.getForObject(url, Product.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving product", e);
+        }
     }
 
     public List<Product> getAllProducts() {
