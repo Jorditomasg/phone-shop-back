@@ -65,7 +65,7 @@ Response: [{ id: string, marca: string, modelo: string, precio: number, ... }]
 - **Docker & Docker Compose**
 - **RestTemplate** for API communication
 - **Lombok** for model simplification
-- **JUnit & Mockito** for testing
+- ~~**JUnit & Mockito** for testing~~
 
 
 ## Running Tests
